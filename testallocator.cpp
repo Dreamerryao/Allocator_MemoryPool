@@ -1,6 +1,7 @@
 
 #include "stdafx.h"
 #include "new_allocator.h"
+// #include "myallocator.h"
 #include "my_allocator.h"
 #include <ctime>
 #include <vector>
@@ -96,7 +97,7 @@ protected:
 	int m_Y;
 };
 
-#define TESTSIZE 30000
+#define TESTSIZE 10000
 
 template <template<class> class anyAllocator>
 class test {
@@ -114,29 +115,32 @@ class test {
 	//test allocator
 	for (int i = 0; i < TESTSIZE - 4; i++)
 	{
-		tSize = (int)((float)rand()/(float)RAND_MAX * 500);
+		tSize = (int)((float)rand()/(float)RAND_MAX * 10000);
+		// tSize = 64;
 		vecWrapperT<int,anyAllocator> *pNewVec = new vecWrapperT<int,anyAllocator>(INT, new std::vector<int, anyAllocator<int>>(tSize));
 		testVec[i] = (vecWrapper *)pNewVec;
 	}
 
 	for (int i = 0; i < 4; i++)
 	{
-		tSize = (int)((float)rand() / (float)RAND_MAX * 100);
+		tSize = (int)((float)rand() / (float)RAND_MAX * 10000);
+		// tSize = 100;
 		vecWrapperT<myObject,anyAllocator> *pNewVec = new vecWrapperT<myObject,anyAllocator>(CLASS, new std::vector<myObject, anyAllocator<myObject>>(tSize));
 		testVec[TESTSIZE - 4 + i] = (vecWrapper *)pNewVec;
 	}
 	std::cout <<mm <<" allocator: "<< (clock() - start) * 1.0 / CLOCKS_PER_SEC << " seconds"<< std::endl;
 	start = clock();
 	//test resize
-	for (int i = 0; i < 30000; i++)
+	for (int i = 0; i < 100; i++)
 	{
-		tIndex = (int)((float)rand() / (float)RAND_MAX * 500);
-		tSize = (int)((float)rand() / (float)RAND_MAX * 100);
+		tIndex = (int)((float)rand() / (float)RAND_MAX * 10000);
+		// tIndex = 10;
+		tSize = (int)((float)rand() / (float)RAND_MAX * 10000);
 		testVec[tIndex]->resize(tSize);
 	}
 	std::cout <<mm <<" resize: "<< (clock() - start) * 1.0 / CLOCKS_PER_SEC << " seconds"<< std::endl;
 	start = clock();
-	//test assignment
+	// test assignment
 	tIndex = (int)((float)rand() / (float)RAND_MAX * (TESTSIZE - 4 - 1));
 	int tIntValue = 10;
 	testVec[tIndex]->setElement(testVec[tIndex]->size()/2, &tIntValue);
@@ -165,12 +169,16 @@ class test {
 
 int main()
 {
-    test<MyAllocator> test3;
-	test3.testMain(MY_ALLOCATOR);
 	test<std::allocator> test1;
 	test1.testMain(STD_ALLOCATOR);
 	test<New_Allocator>test2;
 	test2.testMain(NEW_ALLOCATOR);
+	test<MyAllocator> test3;
+	test3.testMain(MY_ALLOCATOR);
+
+
+
+
 
 }
 
