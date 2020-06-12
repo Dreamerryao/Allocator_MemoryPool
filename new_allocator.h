@@ -41,7 +41,7 @@ public:
         return tmp;
     }
     //delete operator foe deallocate
-    void deallocate(T* buf, size_type) {delete(buf); }
+    void deallocate(T* tmp, size_type) {delete(tmp); }
 
 };
 #endif

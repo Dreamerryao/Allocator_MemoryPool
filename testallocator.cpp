@@ -1,6 +1,7 @@
 
 #include "stdafx.h"
 #include "new_allocator.h"
+#include "my_allocator.h"
 #include <ctime>
 #include <vector>
 #include <iostream>
@@ -30,7 +31,7 @@ public:
 	virtual void resize(int size) = 0;
 	virtual bool checkElement(int index, void *value) = 0;
 	virtual void setElement(int idex, void *value) = 0;
-protected: 
+protected:
 	int m_type;
 	void *m_pVec;
 };
@@ -40,9 +41,9 @@ class vecWrapperT : public vecWrapper
 {
 public:
 	vecWrapperT(int type, std::vector<T, anyAllocator<T> > *pVec)
-	{ 
+	{
 		m_type = type;
-		m_pVec = pVec;
+		m_pVec = pVec;//type and Vector using template T
 	}
 	virtual ~vecWrapperT() {
 		if (m_pVec)
@@ -95,7 +96,7 @@ protected:
 	int m_Y;
 };
 
-#define TESTSIZE 10000
+#define TESTSIZE 30000
 
 template <template<class> class anyAllocator>
 class test {
@@ -103,7 +104,7 @@ class test {
 
     void testMain(int mode) {
 		clock_t start;
-		
+
 		std::string mm = mode==10001?"New_Allocator":(mode==10002?"My_Allocator":"std_Allocator");
 		start = clock();
 		vecWrapper **testVec;
@@ -113,26 +114,28 @@ class test {
 	//test allocator
 	for (int i = 0; i < TESTSIZE - 4; i++)
 	{
-		tSize = (int)((float)rand()/(float)RAND_MAX * 10000);
+		tSize = (int)((float)rand()/(float)RAND_MAX * 500);
 		vecWrapperT<int,anyAllocator> *pNewVec = new vecWrapperT<int,anyAllocator>(INT, new std::vector<int, anyAllocator<int>>(tSize));
 		testVec[i] = (vecWrapper *)pNewVec;
 	}
 
 	for (int i = 0; i < 4; i++)
 	{
-		tSize = (int)((float)rand() / (float)RAND_MAX * 10000);
+		tSize = (int)((float)rand() / (float)RAND_MAX * 100);
 		vecWrapperT<myObject,anyAllocator> *pNewVec = new vecWrapperT<myObject,anyAllocator>(CLASS, new std::vector<myObject, anyAllocator<myObject>>(tSize));
 		testVec[TESTSIZE - 4 + i] = (vecWrapper *)pNewVec;
 	}
-	
+	std::cout <<mm <<" allocator: "<< (clock() - start) * 1.0 / CLOCKS_PER_SEC << " seconds"<< std::endl;
+	start = clock();
 	//test resize
-	for (int i = 0; i < 100; i++)
+	for (int i = 0; i < 30000; i++)
 	{
-		tIndex = (int)((float)rand() / (float)RAND_MAX * (float)TESTSIZE);
-		tSize = (int)((float)rand() / (float)RAND_MAX * (float)TESTSIZE);
+		tIndex = (int)((float)rand() / (float)RAND_MAX * 500);
+		tSize = (int)((float)rand() / (float)RAND_MAX * 100);
 		testVec[tIndex]->resize(tSize);
 	}
-
+	std::cout <<mm <<" resize: "<< (clock() - start) * 1.0 / CLOCKS_PER_SEC << " seconds"<< std::endl;
+	start = clock();
 	//test assignment
 	tIndex = (int)((float)rand() / (float)RAND_MAX * (TESTSIZE - 4 - 1));
 	int tIntValue = 10;
@@ -145,26 +148,29 @@ class test {
 	testVec[tIndex]->setElement(testVec[tIndex]->size()/2, &tObj);
 	if (!testVec[tIndex]->checkElement(testVec[tIndex]->size()/2, &tObj))
 		std::cout << "incorrect assignment in vector %d\n" << tIndex << std::endl;
-	
+
 	myObject tObj1(13, 20);
 	testVec[tIndex]->setElement(testVec[tIndex]->size()/2, &tObj1);
 	if (!testVec[tIndex]->checkElement(testVec[tIndex]->size() / 2, &tObj1))
 		std::cout << "incorrect assignment in vector " << tIndex << " for object (13,20)" << std::endl;
- 	std::cout <<mm << (clock() - start) * 1.0 / CLOCKS_PER_SEC << " seconds"<< std::endl;
-	start = clock();
+ 	std::cout <<mm <<" assignment: "<< (clock() - start) * 1.0 / CLOCKS_PER_SEC << " seconds"<< std::endl;
+
 	for (int i = 0; i < TESTSIZE; i++)
 		delete testVec[i];
 
 	delete []testVec;
-	 std::cout <<mm << "delete"<< (clock() - start) * 1.0 / CLOCKS_PER_SEC << " seconds"<< std::endl;
+
 	}
 };
 
 int main()
 {
+    test<MyAllocator> test3;
+	test3.testMain(MY_ALLOCATOR);
 	test<std::allocator> test1;
 	test1.testMain(STD_ALLOCATOR);
 	test<New_Allocator>test2;
 	test2.testMain(NEW_ALLOCATOR);
+
 }
 
