@@ -7,6 +7,7 @@
 #include <vector>
 #include <iostream>
 #include <string>
+#pragma GCC optimize(3,"Ofast","inline")
 
 #define INT 1
 #define FLOAT 2
@@ -97,7 +98,7 @@ protected:
 	int m_Y;
 };
 
-#define TESTSIZE 10000
+#define TESTSIZE 100000
 
 template <template<class> class anyAllocator>
 class test {
@@ -171,7 +172,7 @@ int main()
 {
 	test<std::allocator> test1;
 	test1.testMain(STD_ALLOCATOR);
-	test<New_Allocator>test2;
+	test<Malloc_Allocator>test2;
 	test2.testMain(NEW_ALLOCATOR);
 	test<MyAllocator> test3;
 	test3.testMain(MY_ALLOCATOR);

@@ -8,40 +8,42 @@
 #include <climits>
 //allocator using new and delete
 template <class T>
-class New_Allocator
+class Malloc_Allocator
 {
 public:
     //some define from demo
     typedef T value_type;
-    typedef T *pointer;
-    typedef const T *const_pointer;
-    typedef T &reference;
-    typedef const T &const_reference;
-    typedef size_t size_type;
-    typedef ptrdiff_t diference_type;
-    typedef std::false_type propagate_on_container_copy_assignment;
+    typedef value_type *pointer;
+    typedef const value_type *const_pointer;
+    typedef value_type &reference;
+    typedef const value_type &const_reference;
+    typedef std::size_t size_type;
+    typedef ptrdiff_t difference_type;
     typedef std::true_type propagate_on_container_move_assignment;
-    typedef std::true_type propagate_on_container_swap;
-    template <class U>
+    typedef std::true_type is_always_equal;
+    template <typename U>
     struct rebind
     {
-        typedef New_Allocator<U> other;
+        typedef Malloc_Allocator<U> other;
     };
+
     //construct
-    New_Allocator()  = default;
-    New_Allocator(const New_Allocator &New_Allocator) = default;
-    New_Allocator(New_Allocator &&New_Allocator) = default;
-    template <class U>
-    New_Allocator(const New_Allocator<U> &other) noexcept;
+    Malloc_Allocator()  = default;
+    Malloc_Allocator(const Malloc_Allocator &Malloc_Allocator) = default;
+    Malloc_Allocator(Malloc_Allocator &&Malloc_Allocator) = default;
+    template <typename U>
+    Malloc_Allocator(const Malloc_Allocator<U> &other) noexcept;
     //new operator for allocate
-    T* allocate(size_type n) {
-        auto tmp = (T*)(::operator new((size_type)(n * sizeof(T))));
+    T* allocate(std::size_t n) {
+        auto tmp = (T*)(::operator new((std::size_t)(n * sizeof(T))));
 
         if (tmp == 0)throw std::bad_alloc();
         return tmp;
     }
+
     //delete operator foe deallocate
-    void deallocate(T* tmp, size_type) {delete(tmp); }
+    void deallocate(T* tmp, size_type) { ::operator delete(tmp); }
 
 };
+
 #endif

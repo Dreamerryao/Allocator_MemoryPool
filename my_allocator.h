@@ -1,13 +1,10 @@
 #ifndef MY_ALLOCATOR_H
 #define MY_ALLOCATOR_H
 
-#include <new>
 #include <iostream>
-#include <cstddef>
-#include <cstdlib>
-#include <climits>
 
-const int MAX_BYTES = 8192;
+
+const int MAX_BYTES = 65536;
 const int BLOCK_SIZE =64;
 const int FREELIST_NUM = MAX_BYTES / BLOCK_SIZE;
 
