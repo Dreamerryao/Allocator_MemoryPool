@@ -106,7 +106,7 @@ class test {
     void testMain(int mode) {
 		// clock_t start;
 
-		std::string mm = mode==10001?"New_Allocator":(mode==10002?"My_Allocator":"std_Allocator");
+		std::string mm = mode==10001?"Malloc_Allocator":(mode==10002?"My_Allocator":"std_Allocator");
 		// start = clock();
 		vecWrapper **testVec;
 	testVec = new vecWrapper*[TESTSIZE];
@@ -155,7 +155,7 @@ class test {
 
 	myObject tObj1(13, 20);
 	testVec[tIndex]->setElement(testVec[tIndex]->size()/2, &tObj1);
-	if (!testVec[tIndex]->checkElement(testVec[tIndex]->size() / 2, &tObj1))
+	if (!testVec[tIndex]->checkElement(testVec[tIndex]->size() / 2-1, &tObj1))
 		std::cout << "incorrect assignment in vector " << tIndex << " for object (13,20)" << std::endl;
  	// std::cout <<mm <<" assignment: "<< (clock() - start) * 1.0 / CLOCKS_PER_SEC << " seconds"<< std::endl;
 
