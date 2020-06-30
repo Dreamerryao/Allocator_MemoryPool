@@ -7,13 +7,10 @@
 #include "new_allocator.h"
 using namespace std;
 
-// #include "defaultAllocator.hpp"
 
 using Point2D = std::pair<int, int>;
 
-
-
-template<template<class> class allocator>
+template<template<class> class AnyAllocator>
 class test {
 private:
     int TestSize = 10000;
@@ -22,19 +19,19 @@ public:
     void run(unsigned seed);
 };
 
-template<template<class> class allocator>
-void test<allocator>::run(unsigned seed) {
+template<template<class> class AnyAllocator>
+void test<AnyAllocator>::run(unsigned seed) {
     std::mt19937 gen(seed);
     std::uniform_int_distribution<> dis(1, TestSize);
 
     // vector creation
-    using IntVec = std::vector<int, allocator<int>>;
-    std::vector<IntVec, allocator<IntVec>> vecints(TestSize);
+    using IntVec = std::vector<int, AnyAllocator<int>>;
+    std::vector<IntVec, AnyAllocator<IntVec>> vecints(TestSize);
     for (int i = 0; i < TestSize; i++)
         vecints[i].resize(dis(gen));
 
-    using PointVec = std::vector<Point2D, allocator<Point2D>>;
-    std::vector<PointVec, allocator<PointVec>> vecpts(TestSize);
+    using PointVec = std::vector<Point2D, AnyAllocator<Point2D>>;
+    std::vector<PointVec, AnyAllocator<PointVec>> vecpts(TestSize);
     for (int i = 0; i < TestSize; i++)
         vecpts[i].resize(dis(gen));
 

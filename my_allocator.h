@@ -3,11 +3,12 @@
 
 #include <iostream>
 
-
+//some define 
 const int MAX_BYTES = 65536;
 const int BLOCK_SIZE =64;
 const int FREELIST_NUM = MAX_BYTES / BLOCK_SIZE;
 
+//union freelist_node
 union fl_node {
     union fl_node *fl_ptr;//free_list_pointer
     char client_data[1];
@@ -179,20 +180,24 @@ public:
     {
         typedef MyAllocator<U> Other;
     };
+    //constructor
     MyAllocator() = default;
     MyAllocator(const MyAllocator &myallocator) = default;
     MyAllocator(MyAllocator &&myallocator) = default;
     template <class U>
     MyAllocator(const MyAllocator<U> &myallocator) noexcept;
+    //compute address
     pointer address(reference _Val) const noexcept{//return address of value
         return &_Val;
     }
     const_pointer address(const_reference _Val) const noexcept{
         return &_Val;
     }
+    //deallocate
     void deallocate(pointer _Ptr, size_type _Count){
         MemoryPool::deallocate(_Ptr,_Count);
     }
+    //use memortpool to allocate
     pointer allocate(size_type _Count) {
         if(auto res = static_cast<pointer>(MemoryPool::allocate(_Count * sizeof(value_type))))
         return res;

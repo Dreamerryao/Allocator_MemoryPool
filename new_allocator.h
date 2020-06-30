@@ -31,12 +31,14 @@ public:
     Malloc_Allocator()  = default;
     Malloc_Allocator(const Malloc_Allocator &Malloc_Allocator) = default;
     Malloc_Allocator(Malloc_Allocator &&Malloc_Allocator) = default;
+    //construct with template
     template <typename U>
     Malloc_Allocator(const Malloc_Allocator<U> &other) noexcept;
     //new operator for allocate
     T* allocate(std::size_t n) {
+        //use new to create new space
         auto tmp = (T*)(::operator new((std::size_t)(n * sizeof(T))));
-
+        //have no enough space throw bad_alloc
         if (tmp == 0)throw std::bad_alloc();
         return tmp;
     }

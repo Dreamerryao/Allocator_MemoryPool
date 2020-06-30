@@ -1,13 +1,12 @@
-
+#pragma GCC optimize(3,"Ofast","inline")
 #include "stdafx.h"
 #include "new_allocator.h"
-// #include "myallocator.h"
 #include "my_allocator.h"
 #include <ctime>
 #include <vector>
 #include <iostream>
 #include <string>
-#pragma GCC optimize(3,"Ofast","inline")
+
 
 #define INT 1
 #define FLOAT 2
@@ -105,10 +104,10 @@ class test {
    public:
 
     void testMain(int mode) {
-		clock_t start;
+		// clock_t start;
 
 		std::string mm = mode==10001?"New_Allocator":(mode==10002?"My_Allocator":"std_Allocator");
-		start = clock();
+		// start = clock();
 		vecWrapper **testVec;
 	testVec = new vecWrapper*[TESTSIZE];
 
@@ -129,8 +128,8 @@ class test {
 		vecWrapperT<myObject,anyAllocator> *pNewVec = new vecWrapperT<myObject,anyAllocator>(CLASS, new std::vector<myObject, anyAllocator<myObject>>(tSize));
 		testVec[TESTSIZE - 4 + i] = (vecWrapper *)pNewVec;
 	}
-	std::cout <<mm <<" allocator: "<< (clock() - start) * 1.0 / CLOCKS_PER_SEC << " seconds"<< std::endl;
-	start = clock();
+	// std::cout <<mm <<" allocator: "<< (clock() - start) * 1.0 / CLOCKS_PER_SEC << " seconds"<< std::endl;
+	// start = clock();
 	//test resize
 	for (int i = 0; i < 100; i++)
 	{
@@ -139,8 +138,8 @@ class test {
 		tSize = (int)((float)rand() / (float)RAND_MAX * 10000);
 		testVec[tIndex]->resize(tSize);
 	}
-	std::cout <<mm <<" resize: "<< (clock() - start) * 1.0 / CLOCKS_PER_SEC << " seconds"<< std::endl;
-	start = clock();
+	// std::cout <<mm <<" resize: "<< (clock() - start) * 1.0 / CLOCKS_PER_SEC << " seconds"<< std::endl;
+	// start = clock();
 	// test assignment
 	tIndex = (int)((float)rand() / (float)RAND_MAX * (TESTSIZE - 4 - 1));
 	int tIntValue = 10;
@@ -158,7 +157,7 @@ class test {
 	testVec[tIndex]->setElement(testVec[tIndex]->size()/2, &tObj1);
 	if (!testVec[tIndex]->checkElement(testVec[tIndex]->size() / 2, &tObj1))
 		std::cout << "incorrect assignment in vector " << tIndex << " for object (13,20)" << std::endl;
- 	std::cout <<mm <<" assignment: "<< (clock() - start) * 1.0 / CLOCKS_PER_SEC << " seconds"<< std::endl;
+ 	// std::cout <<mm <<" assignment: "<< (clock() - start) * 1.0 / CLOCKS_PER_SEC << " seconds"<< std::endl;
 
 	for (int i = 0; i < TESTSIZE; i++)
 		delete testVec[i];
@@ -169,17 +168,13 @@ class test {
 };
 
 int main()
-{
+{	
+	//test correct
 	test<std::allocator> test1;
 	test1.testMain(STD_ALLOCATOR);
 	test<Malloc_Allocator>test2;
 	test2.testMain(NEW_ALLOCATOR);
 	test<MyAllocator> test3;
 	test3.testMain(MY_ALLOCATOR);
-
-
-
-
-
 }
 
