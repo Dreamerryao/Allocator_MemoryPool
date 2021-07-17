@@ -3,7 +3,7 @@
 
 #include <iostream>
 
-//some define 
+//some define
 const int MAX_BYTES = 65536;
 const int BLOCK_SIZE =64;
 const int FREELIST_NUM = MAX_BYTES / BLOCK_SIZE;
@@ -46,7 +46,7 @@ private:
 		if (cnt_flnodes==1) return chunk;
 		//update the free list
 		now_list = free_list + FREELIST_INDEX(n);
-		// first block return 
+		// first block return
 		res = (fl_node*)chunk;
 		*now_list = next_node = (fl_node*)(chunk + n);
         //get link for block left
@@ -162,7 +162,7 @@ std::size_t MemoryPool::heap_size = 0;
 fl_node * MemoryPool::free_list[FREELIST_NUM] = {nullptr};
 // mempory_allocator
 template <class T>
-class MyAllocator
+class Allocator
 {
 public:
     //some define on https://en.cppreference.com/w/cpp/memory/allocator
@@ -178,14 +178,14 @@ public:
     template <typename U>
     struct rebind
     {
-        typedef MyAllocator<U> Other;
+        typedef Allocator<U> Other;
     };
     //constructor
-    MyAllocator() = default;
-    MyAllocator(const MyAllocator &myallocator) = default;
-    MyAllocator(MyAllocator &&myallocator) = default;
+    Allocator() = default;
+    Allocator(const Allocator &allocator) = default;
+    Allocator(Allocator &&allocator) = default;
     template <class U>
-    MyAllocator(const MyAllocator<U> &myallocator) noexcept;
+    Allocator(const Allocator<U> &allocator) noexcept;
     //compute address
     pointer address(reference _Val) const noexcept{//return address of value
         return &_Val;
@@ -206,7 +206,7 @@ public:
     template <class _Uty>
     void destroy(_Uty *_Ptr){
         _Ptr->~_Uty();
-    } 
+    }
     template <class _Objty, class... _Types>
     void construct(_Objty *_Ptr, _Types &&... _Args){
     new(_Ptr) _Objty(std::forward<_Types>(_Args)...);

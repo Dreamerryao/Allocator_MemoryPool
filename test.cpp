@@ -1,9 +1,9 @@
-#pragma GCC optimize(3,"Ofast","inline")
+#pragma GCC optimize(3, "Ofast" ,"inline")
 #include <iostream>
 #include <random>
 #include <vector>
 #include <chrono>
-#include "my_allocator.h"
+#include "allocator.h"
 #include "new_allocator.h"
 using namespace std;
 
@@ -68,7 +68,7 @@ void test<AnyAllocator>::run(unsigned seed) {
 }
 
 int main() {
-    test<MyAllocator> test1;
+    test<Allocator> test1;
     test<Malloc_Allocator> test2;
     test<std::allocator> test3;
     unsigned seed = chrono::system_clock::now().time_since_epoch().count();

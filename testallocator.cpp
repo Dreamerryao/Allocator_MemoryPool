@@ -1,7 +1,6 @@
 #pragma GCC optimize(3,"Ofast","inline")
-#include "stdafx.h"
 #include "new_allocator.h"
-#include "my_allocator.h"
+#include "allocator.h"
 #include <ctime>
 #include <vector>
 #include <iostream>
@@ -168,13 +167,13 @@ class test {
 };
 
 int main()
-{	
+{
 	//test correct
 	test<std::allocator> test1;
 	test1.testMain(STD_ALLOCATOR);
 	test<Malloc_Allocator>test2;
 	test2.testMain(NEW_ALLOCATOR);
-	test<MyAllocator> test3;
+	test<Allocator> test3;
 	test3.testMain(MY_ALLOCATOR);
 }
 
